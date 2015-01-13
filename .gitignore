@@ -35,3 +35,8 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Additional Files to be ignored.
+*.settings
+*.project
+*.svn
