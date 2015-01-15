@@ -38,5 +38,5 @@ Thumbs.db
 
 # Additional Files to be ignored.
 *.settings
-*.project
 *.svn
+/bin/
