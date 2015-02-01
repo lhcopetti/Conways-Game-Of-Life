@@ -11,28 +11,6 @@ public class ConwaysGameOfLife
 
 	private BoardState[][] board;
 
-	public enum BoardState
-	{
-		LIVE
-		{
-
-			@Override
-			public String toString()
-			{
-				return "X";
-			}
-		},
-		DEAD
-		{
-
-			@Override
-			public String toString()
-			{
-				return "_";
-			}
-		}
-	}
-
 	public int getNumberOfNeighbours(int i, int j)
 	{
 		int liveNeighbours = 0;
@@ -68,7 +46,7 @@ public class ConwaysGameOfLife
 		this.board = board;
 	}
 
-	public boolean isSquared(BoardState[][] matrix)
+	private boolean isSquared(BoardState[][] matrix)
 	{
 		return matrix.length == matrix[0].length;
 	}
@@ -78,7 +56,7 @@ public class ConwaysGameOfLife
 		return board;
 	}
 
-	public BoardState negate(BoardState bs)
+	private BoardState negate(BoardState bs)
 	{
 		if (bs == BoardState.LIVE) return BoardState.DEAD;
 		return BoardState.LIVE;

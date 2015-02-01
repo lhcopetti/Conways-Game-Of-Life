@@ -11,9 +11,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
-import com.copetti.core.ConwaysGameOfLife.BoardState;
+import com.copetti.core.BoardState;
 
 
+@SuppressWarnings("serial")
 public class Grid extends JPanel
 {
 
