@@ -1,12 +1,20 @@
 package com.copetti.gui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.JCheckBoxMenuItem;
 
 
 @SuppressWarnings("serial")
@@ -15,8 +23,8 @@ public class MainWindow extends JFrame
 
 	public MainWindow()
 	{
+		setSize(new Dimension(500, 500));
 		setTitle("Conway's Game Of Life");
-		setSize(730, 559);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]
@@ -40,6 +48,31 @@ public class MainWindow extends JFrame
 		gbc_pnl_Board.gridy = 0;
 		getContentPane().add(pnl_Board, gbc_pnl_Board);
 
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu mnNewMenu = new JMenu("File");
+		mnNewMenu.setHorizontalAlignment(SwingConstants.TRAILING);
+		menuBar.add(mnNewMenu);
+
+		JMenuItem mntmNewMenuItem = new JMenuItem("Quit without saving");
+		mntmNewMenuItem.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				dispose();
+			}
+		});
+		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenu mnNewMenu_1 = new JMenu("Game Options");
+		menuBar.add(mnNewMenu_1);
+		
+		JCheckBoxMenuItem chckbxmntmNewCheckItem = new JCheckBoxMenuItem("Squared Grid");
+		chckbxmntmNewCheckItem.setSelected(true);
+		mnNewMenu_1.add(chckbxmntmNewCheckItem);
 		setVisible(true);
 	}
 

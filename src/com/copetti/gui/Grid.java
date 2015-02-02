@@ -12,19 +12,23 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 import com.copetti.core.BoardState;
+import com.copetti.core.ConwaysGameOfLife;
 
 
 @SuppressWarnings("serial")
 public class Grid extends JPanel
 {
 
+	private ConwaysGameOfLife cg;
+	private Dimension gridCellSize;
 	private int gridCellCount;
-	private int gridCellSize;
 
 	public Grid(int gridCellCount)
 	{
 		super();
 		this.gridCellCount = gridCellCount;
+		cg = new ConwaysGameOfLife(BoardState.getAliveBoard(gridCellCount));
+		this.gridCellSize = getGridCellSize();
 
 		registerListeners();
 	}
@@ -61,20 +65,21 @@ public class Grid extends JPanel
 		int cellSizeX = this.getWidth() / gridCellCount;
 		int cellSizeY = this.getHeight() / gridCellCount;
 
-		gridCellSize = Math.min(cellSizeX, cellSizeY);
+		gridCellSize = new Dimension(cellSizeX, cellSizeY);
 	}
 
 	private void mouseClickEventHandler(MouseEvent e)
 	{
 		Point p = absoluteToGridCoordinates(e.getX(), e.getY());
 
+		// Invert so that X's increase downwards and Y's increase rightwards.
 		mouseClickedAt(p.x, p.y);
 	}
 
 	private Point absoluteToGridCoordinates(int x, int y)
 	{
-		int i = x / gridCellSize;
-		int j = y / gridCellSize;
+		int i = (int) (x / gridCellSize.getWidth());
+		int j = (int) (y / gridCellSize.getHeight());
 
 		if (i >= gridCellCount || j >= gridCellCount)
 			return new Point(-1, -1);
@@ -86,6 +91,12 @@ public class Grid extends JPanel
 	{
 		System.out.println("Mouse clicked at: X: [" + x + "] and Y: [" + y
 				+ "].");
+	
+		// Invert the state of the cell that has been clicked.
+		cg.negateOnBoard(x, y);
+		
+		// Force the repaint.
+		repaint();
 	}
 
 	public void setGridSize(int gridCellcount)
@@ -96,14 +107,14 @@ public class Grid extends JPanel
 			this.gridCellCount = 5; // Default 5x5 Grid.
 	}
 
-	public int getGridCellSize()
+	public Dimension getGridCellSize()
 	{
 		Dimension ds = this.getSize();
 
 		int xAxis = ds.width;
 		int yAxis = ds.height;
 
-		return Math.min(xAxis / gridCellCount, yAxis / gridCellCount);
+		return new Dimension(xAxis / gridCellCount, yAxis / gridCellCount);
 	}
 
 	@Override
@@ -111,17 +122,36 @@ public class Grid extends JPanel
 	{
 		super.paintComponent(g);
 
-		// Update gridCellSize
-		Dimension panelSize = getSize();
-		int xAxis = panelSize.width;
-		int yAxis = panelSize.height;
+		drawConwaysGrid(g);
+		
+		// Draw grids last so it appears on top.
+		drawGridLines(g, Color.BLUE);
 
-		gridCellSize = Math.min(xAxis / gridCellCount, yAxis / gridCellCount);
+	}
 
-		drawRect(g, 0, 0, Color.BLACK);
-		drawRect(g, 1, 1, Color.BLACK);
-		drawRect(g, 2, 2, Color.BLUE);
+	private void drawConwaysGrid(Graphics g)
+	{
+		BoardState[][] bs = cg.getBoard();
 
+		for( int i = 0; i < bs.length; i++ )
+			for( int j = 0; j < bs.length; j++ )
+				drawRect(g, i, j, getColor(bs[i][j]));
+
+	}
+
+	private void drawGridLines(Graphics g, Color c)
+	{
+		Color LastColor = g.getColor();
+		g.setColor(c);
+
+		for( int i = 0; i < gridCellCount; i++ )
+			for( int j = 0; j < gridCellCount; j++ )
+			{
+				g.drawRect(i * gridCellSize.width, j * gridCellSize.height,
+						gridCellSize.width, gridCellSize.height);
+			}
+
+		g.setColor(LastColor);
 	}
 
 	private void drawRect(Graphics g, int i, int j, Color color)
@@ -129,8 +159,8 @@ public class Grid extends JPanel
 		Color lastColor = g.getColor();
 
 		g.setColor(color);
-		g.fillRect(i * gridCellSize, j * gridCellSize, gridCellSize,
-				gridCellSize);
+		g.fillRect(i * gridCellSize.width, j * gridCellSize.height,
+				gridCellSize.width, gridCellSize.height);
 
 		// Restore graphics object.
 		g.setColor(lastColor);
@@ -144,4 +174,5 @@ public class Grid extends JPanel
 		else
 			return Color.WHITE;
 	}
+
 }

@@ -56,6 +56,23 @@ public class ConwaysGameOfLife
 		return board;
 	}
 
+	/**
+	 * Returns true if the operation was successfull.
+	 * 
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	public boolean negateOnBoard(int i, int j)
+	{
+		if (isInsideBoard(i, j))
+		{
+			board[i][j] = negate(board[i][j]);
+			return true;
+		}
+		return false;
+	}
+
 	private BoardState negate(BoardState bs)
 	{
 		if (bs == BoardState.LIVE) return BoardState.DEAD;
