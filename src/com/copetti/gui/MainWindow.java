@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.InputMismatchException;
 
 import javax.swing.JFrame;
@@ -41,10 +43,20 @@ public class MainWindow extends JFrame
 		getContentPane().setLayout(gridBagLayout);
 
 		pnl_Board = new Grid(5);
+		pnl_Board.addKeyListener(new KeyAdapter()
+		{
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				keyPressedEvent(e);
+			}
+		});
 		pnl_Board.setBorder(new TitledBorder(null, "Conway's Board",
 				TitledBorder.LEADING, TitledBorder.TOP, null,
 				SystemColor.textHighlight));
 		pnl_Board.setLayout(null);
+		pnl_Board.setFocusable(true);
 		GridBagConstraints gbc_pnl_Board = new GridBagConstraints();
 		gbc_pnl_Board.fill = GridBagConstraints.BOTH;
 		gbc_pnl_Board.gridx = 0;
@@ -96,6 +108,15 @@ public class MainWindow extends JFrame
 		mnNewMenu_1.add(mntmNewMenuItem_1);
 		mnNewMenu_1.add(mntmChangeGridSize);
 		setVisible(true);
+	}
+
+	private void keyPressedEvent(KeyEvent e)
+	{
+		if (e.getKeyCode() == KeyEvent.VK_SPACE)
+			getPnl_Board().keyboardSpacePressed();
+		else
+			if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				getPnl_Board().keyboardEnterPressed();
 	}
 
 	private void squareGridOptionSelected(ActionEvent e)

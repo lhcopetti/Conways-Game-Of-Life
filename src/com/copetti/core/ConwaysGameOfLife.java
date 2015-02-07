@@ -83,7 +83,7 @@ public class ConwaysGameOfLife
 	{
 		if (newGridSize < 5) return;
 
-		board = BoardState.getAliveBoard(newGridSize);
+		board = BoardState.getDeadBoard(newGridSize);
 	}
 
 	public void getNextState()
@@ -149,6 +149,11 @@ public class ConwaysGameOfLife
 		}
 
 		return sb.toString();
+	}
+
+	public void resetBoard()
+	{
+		setNewGridSize(getBoardSize());
 	}
 
 }
