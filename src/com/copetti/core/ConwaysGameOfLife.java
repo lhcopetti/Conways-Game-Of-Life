@@ -11,26 +11,13 @@ public class ConwaysGameOfLife
 
 	private BoardState[][] board;
 
-	public enum BoardState
+	public ConwaysGameOfLife(BoardState[][] board)
 	{
-		LIVE
-		{
+		if (board == null || board.length == 0 || !isSquared(board))
+			throw new InputMismatchException(
+					"There must be a valid Matrix for the game to work.");
 
-			@Override
-			public String toString()
-			{
-				return "X";
-			}
-		},
-		DEAD
-		{
-
-			@Override
-			public String toString()
-			{
-				return "_";
-			}
-		}
+		this.board = board;
 	}
 
 	public int getNumberOfNeighbours(int i, int j)
@@ -59,16 +46,7 @@ public class ConwaysGameOfLife
 		return i >= 0 && j >= 0 && i < getBoardSize() && j < getBoardSize();
 	}
 
-	public ConwaysGameOfLife(BoardState[][] board)
-	{
-		if (board == null || board.length == 0 || !isSquared(board))
-			throw new InputMismatchException(
-					"There must be a valid Matrix for the game to work.");
-
-		this.board = board;
-	}
-
-	public boolean isSquared(BoardState[][] matrix)
+	private boolean isSquared(BoardState[][] matrix)
 	{
 		return matrix.length == matrix[0].length;
 	}
@@ -78,10 +56,34 @@ public class ConwaysGameOfLife
 		return board;
 	}
 
-	public BoardState negate(BoardState bs)
+	/**
+	 * Returns true if the operation was successful.
+	 * 
+	 * @param i
+	 * @param j
+	 * @return
+	 */
+	public boolean negateOnBoard(int i, int j)
+	{
+		if (isInsideBoard(i, j))
+		{
+			board[i][j] = negate(board[i][j]);
+			return true;
+		}
+		return false;
+	}
+
+	private BoardState negate(BoardState bs)
 	{
 		if (bs == BoardState.LIVE) return BoardState.DEAD;
 		return BoardState.LIVE;
+	}
+
+	public void setNewGridSize(int newGridSize)
+	{
+		if (newGridSize < 5) return;
+
+		board = BoardState.getDeadBoard(newGridSize);
 	}
 
 	public void getNextState()
@@ -147,6 +149,11 @@ public class ConwaysGameOfLife
 		}
 
 		return sb.toString();
+	}
+
+	public void resetBoard()
+	{
+		setNewGridSize(getBoardSize());
 	}
 
 }
