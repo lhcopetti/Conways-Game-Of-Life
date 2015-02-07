@@ -86,6 +86,13 @@ public class ConwaysGameOfLife
 		board = BoardState.getDeadBoard(newGridSize);
 	}
 
+	public void setBoard(BoardState[][] bs)
+	{
+		if (bs != null && bs.length >= 5 && bs[0].length >= 5) board = bs;
+		else
+			System.out.println("[Conways Game Of Life] - Invalid BoardState assigned");
+	}
+
 	public void getNextState()
 	{
 		List<Point> flipState = new ArrayList<Point>();

@@ -42,7 +42,7 @@ public class MainWindow extends JFrame
 		{ 1.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 
-		pnl_Board = new Grid(5);
+		pnl_Board = new Grid(15);
 		pnl_Board.addKeyListener(new KeyAdapter()
 		{
 
@@ -112,11 +112,18 @@ public class MainWindow extends JFrame
 
 	private void keyPressedEvent(KeyEvent e)
 	{
-		if (e.getKeyCode() == KeyEvent.VK_SPACE)
+		switch (e.getKeyCode())
+		{
+		case KeyEvent.VK_SPACE:
 			getPnl_Board().keyboardSpacePressed();
-		else
-			if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				getPnl_Board().keyboardEnterPressed();
+			break;
+		case KeyEvent.VK_ENTER:
+			getPnl_Board().keyboardEnterPressed();
+			break;
+		case KeyEvent.VK_ESCAPE:
+			dispose();
+			break;
+		}
 	}
 
 	private void squareGridOptionSelected(ActionEvent e)

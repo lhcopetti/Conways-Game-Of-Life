@@ -26,7 +26,7 @@ public enum BoardState
 		return getBoard(size, DEAD);
 	}
 
-	public static BoardState[][] getAliveBoard(int size)
+	public static BoardState[][] getLiveBoard(int size)
 	{
 		return getBoard(size, LIVE);
 	}

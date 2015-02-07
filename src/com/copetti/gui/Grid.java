@@ -24,7 +24,7 @@ public class Grid extends JPanel
 	public Grid(int gridCellCount)
 	{
 		super();
-		cg = new ConwaysGameOfLife(BoardState.getAliveBoard(gridCellCount));
+		cg = new ConwaysGameOfLife(BoardState.getLiveBoard(gridCellCount));
 		this.gridCellSize = getGridCellSize();
 
 		requestFocusInWindow();
@@ -186,7 +186,14 @@ public class Grid extends JPanel
 
 	public void keyboardSpacePressed()
 	{
-		cg.resetBoard();
+		BoardState[][] liveBoard = BoardState.getLiveBoard(cg.getBoardSize());
+
+		if (BoardState.isEqual(liveBoard, cg.getBoard()))
+			cg.setBoard(BoardState.getDeadBoard(cg.getBoardSize()));
+		else
+			cg.setBoard(liveBoard);
+
+		repaint();
 	}
 
 	public void keyboardEnterPressed()
@@ -194,5 +201,4 @@ public class Grid extends JPanel
 		cg.getNextState();
 		repaint();
 	}
-
 }

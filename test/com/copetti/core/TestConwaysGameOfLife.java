@@ -40,7 +40,7 @@ public class TestConwaysGameOfLife
 		 * | A | D | A | 
 		 * | A | A | A |
 		 */
-		BoardState[][] bState_2 = BoardState.getAliveBoard(3);
+		BoardState[][] bState_2 = BoardState.getLiveBoard(3);
 		bState_2[1][1] = BoardState.DEAD;
 		cg_boardState_2 = new ConwaysGameOfLife(bState_2);
 	}
