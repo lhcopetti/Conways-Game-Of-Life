@@ -57,7 +57,7 @@ public class ConwaysGameOfLife
 	}
 
 	/**
-	 * Returns true if the operation was successfull.
+	 * Returns true if the operation was successful.
 	 * 
 	 * @param i
 	 * @param j
