@@ -3,7 +3,6 @@ package com.copetti.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -21,12 +20,10 @@ public class Grid extends JPanel
 
 	private ConwaysGameOfLife cg;
 	private Dimension gridCellSize;
-	private int gridCellCount;
 
 	public Grid(int gridCellCount)
 	{
 		super();
-		this.gridCellCount = gridCellCount;
 		cg = new ConwaysGameOfLife(BoardState.getAliveBoard(gridCellCount));
 		this.gridCellSize = getGridCellSize();
 
@@ -74,8 +71,8 @@ public class Grid extends JPanel
 	{
 		System.out.println("Resize event...");
 
-		int cellSizeX = this.getWidth() / gridCellCount;
-		int cellSizeY = this.getHeight() / gridCellCount;
+		int cellSizeX = this.getWidth() / cg.getBoardSize();
+		int cellSizeY = this.getHeight() / cg.getBoardSize();
 
 		gridCellSize = new Dimension(cellSizeX, cellSizeY);
 	}
@@ -105,14 +102,6 @@ public class Grid extends JPanel
 		repaint();
 	}
 
-	public void setGridSize(int gridCellcount)
-	{
-		if (gridCellcount > 0)
-			this.gridCellCount = gridCellcount;
-		else
-			this.gridCellCount = 5; // Default 5x5 Grid.
-	}
-
 	public Dimension getGridCellSize()
 	{
 		Dimension ds = this.getSize();
@@ -120,7 +109,8 @@ public class Grid extends JPanel
 		int xAxis = ds.width;
 		int yAxis = ds.height;
 
-		return new Dimension(xAxis / gridCellCount, yAxis / gridCellCount);
+		return new Dimension(xAxis / cg.getBoardSize(), yAxis
+				/ cg.getBoardSize());
 	}
 
 	@Override
@@ -148,13 +138,13 @@ public class Grid extends JPanel
 	private void drawGridLines(Graphics g, Color c)
 	{
 		Color LastColor = g.getColor();
+		Dimension d = getGridCellSize();
 		g.setColor(c);
 
-		for( int i = 0; i < gridCellCount; i++ )
-			for( int j = 0; j < gridCellCount; j++ )
+		for( int i = 0; i < cg.getBoardSize(); i++ )
+			for( int j = 0; j < cg.getBoardSize(); j++ )
 			{
-				g.drawRect(i * gridCellSize.width, j * gridCellSize.height,
-						gridCellSize.width, gridCellSize.height);
+				g.drawRect(i * d.width, j * d.height, d.width, d.height);
 			}
 
 		g.setColor(LastColor);
@@ -163,10 +153,10 @@ public class Grid extends JPanel
 	private void drawRect(Graphics g, int i, int j, Color color)
 	{
 		Color lastColor = g.getColor();
+		Dimension d = getGridCellSize();
 
 		g.setColor(color);
-		g.fillRect(i * gridCellSize.width, j * gridCellSize.height,
-				gridCellSize.width, gridCellSize.height);
+		g.fillRect(i * d.width, j * d.height, d.width, d.height);
 
 		// Restore graphics object.
 		g.setColor(lastColor);
@@ -179,6 +169,17 @@ public class Grid extends JPanel
 			return Color.BLACK;
 		else
 			return Color.WHITE;
+	}
+
+	public ConwaysGameOfLife getConways()
+	{
+		return cg;
+	}
+
+	public void changeGridSize(int newGridSize)
+	{
+		cg.setNewGridSize(newGridSize);
+		repaint();
 	}
 
 }

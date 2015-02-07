@@ -11,6 +11,15 @@ public class ConwaysGameOfLife
 
 	private BoardState[][] board;
 
+	public ConwaysGameOfLife(BoardState[][] board)
+	{
+		if (board == null || board.length == 0 || !isSquared(board))
+			throw new InputMismatchException(
+					"There must be a valid Matrix for the game to work.");
+
+		this.board = board;
+	}
+
 	public int getNumberOfNeighbours(int i, int j)
 	{
 		int liveNeighbours = 0;
@@ -35,15 +44,6 @@ public class ConwaysGameOfLife
 	public boolean isInsideBoard(int i, int j)
 	{
 		return i >= 0 && j >= 0 && i < getBoardSize() && j < getBoardSize();
-	}
-
-	public ConwaysGameOfLife(BoardState[][] board)
-	{
-		if (board == null || board.length == 0 || !isSquared(board))
-			throw new InputMismatchException(
-					"There must be a valid Matrix for the game to work.");
-
-		this.board = board;
 	}
 
 	private boolean isSquared(BoardState[][] matrix)
@@ -77,6 +77,13 @@ public class ConwaysGameOfLife
 	{
 		if (bs == BoardState.LIVE) return BoardState.DEAD;
 		return BoardState.LIVE;
+	}
+
+	public void setNewGridSize(int newGridSize)
+	{
+		if (newGridSize < 5) return;
+
+		board = BoardState.getAliveBoard(newGridSize);
 	}
 
 	public void getNextState()

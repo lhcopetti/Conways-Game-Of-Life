@@ -6,20 +6,23 @@ import java.awt.GridBagLayout;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.InputMismatchException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
-import javax.swing.JCheckBoxMenuItem;
 
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame
 {
+
+	private Grid pnl_Board;
 
 	public MainWindow()
 	{
@@ -37,7 +40,7 @@ public class MainWindow extends JFrame
 		{ 1.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 
-		Grid pnl_Board = new Grid(5);
+		pnl_Board = new Grid(5);
 		pnl_Board.setBorder(new TitledBorder(null, "Conway's Board",
 				TitledBorder.LEADING, TitledBorder.TOP, null,
 				SystemColor.textHighlight));
@@ -66,14 +69,70 @@ public class MainWindow extends JFrame
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);
-		
+
 		JMenu mnNewMenu_1 = new JMenu("Game Options");
 		menuBar.add(mnNewMenu_1);
-		
-		JCheckBoxMenuItem chckbxmntmNewCheckItem = new JCheckBoxMenuItem("Squared Grid");
-		chckbxmntmNewCheckItem.setSelected(true);
-		mnNewMenu_1.add(chckbxmntmNewCheckItem);
+
+		JMenuItem mntmChangeGridSize = new JMenuItem("Change grid Size");
+		mntmChangeGridSize.addActionListener(new ActionListener()
+		{
+
+			public void actionPerformed(ActionEvent e)
+			{
+				changeGridSizeOptionSelected(e);
+			}
+		});
+
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Square Grid?");
+		mntmNewMenuItem_1.addActionListener(new ActionListener()
+		{
+
+			public void actionPerformed(ActionEvent e)
+			{
+				squareGridOptionSelected(e);
+			}
+
+		});
+		mnNewMenu_1.add(mntmNewMenuItem_1);
+		mnNewMenu_1.add(mntmChangeGridSize);
 		setVisible(true);
+	}
+
+	private void squareGridOptionSelected(ActionEvent e)
+	{
+		int height = getHeight();
+		int width = getWidth();
+
+		int greater = Math.max(height, width);
+
+		setSize(greater, greater);
+
+	}
+
+	private void changeGridSizeOptionSelected(ActionEvent e)
+	{
+		// Create a JOptionPane to prompt the user for grid size
+		String sNewGridSize = JOptionPane.showInputDialog(MainWindow.this,
+				"Please choose a new grid size (5-50).");
+
+		try
+		{
+			int newGridSize = Integer.parseInt(sNewGridSize);
+			if (newGridSize >= 5 && newGridSize <= 50)
+				getPnl_Board().changeGridSize(newGridSize);
+			else
+				throw new InputMismatchException();
+
+		}
+		catch (InputMismatchException ex)
+		{
+			JOptionPane
+					.showMessageDialog(
+							MainWindow.this,
+							"Invalid value. The input must be a number between 5 and 50.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+		}
+
 	}
 
 	public static void main(String[] args)
@@ -87,5 +146,10 @@ public class MainWindow extends JFrame
 				new MainWindow();
 			}
 		});
+	}
+
+	public Grid getPnl_Board()
+	{
+		return pnl_Board;
 	}
 }
