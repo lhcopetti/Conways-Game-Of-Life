@@ -39,10 +39,22 @@ public class Grid extends JPanel
 		this.addMouseListener(new MouseAdapter()
 		{
 
+			private int[] pressedAt = null;
+			private int[] releasedAt = null;
+
 			@Override
-			public void mouseClicked(MouseEvent e)
+			public void mousePressed(MouseEvent e)
 			{
-				mouseClickEventHandler(e);
+				pressedAt = getGridCoordinates(e.getX(), e.getY());
+			}
+
+			public void mouseReleased(MouseEvent e)
+			{
+				releasedAt = getGridCoordinates(e.getX(), e.getY());
+
+				if (pressedAt[0] == releasedAt[0]
+						&& pressedAt[1] == releasedAt[1])
+					mouseClickedAt(pressedAt[0], releasedAt[1]);
 			}
 		});
 
@@ -68,33 +80,27 @@ public class Grid extends JPanel
 		gridCellSize = new Dimension(cellSizeX, cellSizeY);
 	}
 
-	private void mouseClickEventHandler(MouseEvent e)
-	{
-		Point p = absoluteToGridCoordinates(e.getX(), e.getY());
-
-		// Invert so that X's increase downwards and Y's increase rightwards.
-		mouseClickedAt(p.x, p.y);
-	}
-
-	private Point absoluteToGridCoordinates(int x, int y)
+	private int[] getGridCoordinates(int x, int y)
 	{
 		int i = (int) (x / gridCellSize.getWidth());
 		int j = (int) (y / gridCellSize.getHeight());
 
-		if (i >= gridCellCount || j >= gridCellCount)
-			return new Point(-1, -1);
-		else
-			return new Point(i, j);
+		// Not used anymore. The cells are squared.
+		// if (i >= gridCellCount || j >= gridCellCount)
+		// return new Point(-1, -1);
+		// else
+		return new int[]
+		{ i, j };
 	}
 
 	private void mouseClickedAt(int x, int y)
 	{
 		System.out.println("Mouse clicked at: X: [" + x + "] and Y: [" + y
 				+ "].");
-	
+
 		// Invert the state of the cell that has been clicked.
 		cg.negateOnBoard(x, y);
-		
+
 		// Force the repaint.
 		repaint();
 	}
@@ -123,7 +129,7 @@ public class Grid extends JPanel
 		super.paintComponent(g);
 
 		drawConwaysGrid(g);
-		
+
 		// Draw grids last so it appears on top.
 		drawGridLines(g, Color.BLUE);
 
